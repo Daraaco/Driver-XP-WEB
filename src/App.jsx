@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m, useReducedMotion } from "framer-motion";
+import { lazy, Suspense, useEffect, useState, startTransition } from "react";
+import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, motion, useReducedMotion } from "framer-motion";
 
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
 
 import Home from "./pages/Home";
-import About from "./pages/About";
-import DriverXP from "./pages/DriverXP";
-import DriverXPDashboard from "./features/dashboard/pages/DriverXPDashboard";
-import Services from "./pages/Services";
-import Contact from "./pages/Contact";
+
+const About = lazy(() => import("./pages/About"));
+const DriverXP = lazy(() => import("./pages/DriverXP"));
+const DriverXPDashboard = lazy(() => import("./features/dashboard/pages/DriverXPDashboard"));
+const Services = lazy(() => import("./pages/Services"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 const ADMIN_ACCESS_KEY = (import.meta.env.VITE_ADMIN_ACCESS_KEY || "driverxp-admin-2026").trim();
 
@@ -44,11 +45,22 @@ export default function App() {
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    if (activePage !== "driverxp-dashboard") {
-      setDashboardEntry("company");
-    }
-  }, [activePage]);
+  const navigateTo = (page) => {
+    startTransition(() => {
+      if (page !== "driverxp-dashboard") {
+        setDashboardEntry("company");
+      }
+      setActivePage(page);
+    });
+  };
+
+  const suspenseFallback = (
+    <div className="min-h-[calc(100vh-80px)] px-6 py-28">
+      <div className="mx-auto max-w-6xl rounded-3xl border border-white/10 bg-white/5 p-8 text-white/70 backdrop-blur-sm">
+        Cargando seccion...
+      </div>
+    </div>
+  );
 
   let page;
   switch (activePage) {
@@ -69,7 +81,7 @@ export default function App() {
       break;
     case "home":
     default:
-      page = <Home setActivePage={setActivePage} />;
+      page = <Home setActivePage={navigateTo} />;
       break;
   }
 
@@ -81,24 +93,24 @@ export default function App() {
         {isLoading ? (
           <Loader key="loader" />
         ) : (
-          <m.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Navbar
               activePage={activePage}
-              setActivePage={setActivePage}
+              setActivePage={navigateTo}
               setDashboardEntry={setDashboardEntry}
             />
 
             <main>
               <AnimatePresence mode="wait">
-                <m.div
+                <motion.div
                   key={activePage}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.22 }}
                 >
-                  {page}
-                </m.div>
+                  <Suspense fallback={suspenseFallback}>{page}</Suspense>
+                </motion.div>
               </AnimatePresence>
             </main>
 
@@ -107,7 +119,7 @@ export default function App() {
                 {new Date().getFullYear()} Driver XP | Simulacion | Seguridad Vial | Capacitacion
               </div>
             </footer>
-          </m.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

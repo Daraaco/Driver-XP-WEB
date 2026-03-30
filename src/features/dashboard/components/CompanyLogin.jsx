@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowLeft, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -41,7 +41,7 @@ function CompanyLogin({ onLogin, onBack, showBack = true }) {
   };
 
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -102,7 +102,7 @@ function CompanyLogin({ onLogin, onBack, showBack = true }) {
           </form>
         </div>
       </div>
-    </m.div>
+    </motion.div>
   );
 }
 

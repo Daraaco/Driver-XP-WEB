@@ -1,16 +1,16 @@
 import React from 'react';
-import { m } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const CallToAction = () => {
   return (
-    <m.h1
+    <motion.h1
       className='text-xl font-bold text-white leading-8 w-full'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.5 }}
     >
       Let's turn your ideas into reality
-    </m.h1>
+    </motion.h1>
   );
 };
 

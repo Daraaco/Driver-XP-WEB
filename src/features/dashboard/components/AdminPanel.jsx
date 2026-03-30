@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import { Plus, LogOut, Building2, Users, FileText, Edit, Trash2, Upload, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -160,7 +160,7 @@ function AdminPanel({ onLogout, onLogin }) {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 pt-24 md:pt-28">
-        <m.div
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="bg-slate-800 rounded-xl shadow-2xl p-8 w-full max-w-md border border-slate-700"
@@ -194,13 +194,13 @@ function AdminPanel({ onLogout, onLogin }) {
               Iniciar sesion
             </Button>
           </form>
-        </m.div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -221,7 +221,7 @@ function AdminPanel({ onLogout, onLogin }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <m.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg">
+          <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-purple-200 text-sm font-medium">Total de Empresas</p>
@@ -229,9 +229,9 @@ function AdminPanel({ onLogout, onLogin }) {
               </div>
               <Building2 className="w-12 h-12 text-purple-200 opacity-80" />
             </div>
-          </m.div>
+          </motion.div>
 
-          <m.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl p-6 shadow-lg">
+          <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-200 text-sm font-medium">Usuarios Activos</p>
@@ -239,9 +239,9 @@ function AdminPanel({ onLogout, onLogin }) {
               </div>
               <Users className="w-12 h-12 text-blue-200 opacity-80" />
             </div>
-          </m.div>
+          </motion.div>
 
-          <m.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl p-6 shadow-lg">
+          <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-emerald-200 text-sm font-medium">Total de Documentos</p>
@@ -251,7 +251,7 @@ function AdminPanel({ onLogout, onLogin }) {
               </div>
               <FileText className="w-12 h-12 text-emerald-200 opacity-80" />
             </div>
-          </m.div>
+          </motion.div>
         </div>
 
         <div className="mb-6">
@@ -280,7 +280,7 @@ function AdminPanel({ onLogout, onLogin }) {
           ) : (
             <div className="divide-y divide-slate-700">
               {companies.map((company, index) => (
-                <m.div
+                <motion.div
                   key={company.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -348,7 +348,7 @@ function AdminPanel({ onLogout, onLogin }) {
                       </div>
                     </div>
                   )}
-                </m.div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -375,7 +375,7 @@ function AdminPanel({ onLogout, onLogin }) {
           onUpload={(pdfData) => handlePDFUpload(uploadingCompany.id, pdfData)}
         />
       )}
-    </m.div>
+    </motion.div>
   );
 }
 

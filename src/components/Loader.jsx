@@ -1,9 +1,9 @@
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import headerLogo from "../assets/driverxp-header.png";
 
 export default function Loader() {
   return (
-    <m.div
+    <motion.div
       role="status"
       aria-live="polite"
       className="fixed inset-0 z-[9999] grid place-items-center bg-[#061f33]"
@@ -35,7 +35,7 @@ export default function Loader() {
 
         {/* Barra animada de progreso visual. */}
         <div className="mt-6 h-3 w-full overflow-hidden rounded-full bg-white/10 border border-white/10">
-          <m.div
+          <motion.div
             className="h-full w-full origin-left"
             style={{
               background:
@@ -56,6 +56,6 @@ export default function Loader() {
           Preparando simulacion | Seguridad vial | Metricas
         </div>
       </div>
-    </m.div>
+    </motion.div>
   );
 }

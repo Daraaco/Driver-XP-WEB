@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { site } from "../content/siteContent";
 
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 
-import videoXP from "../assets/video-driver.mp4";
 import fondoBg from "../assets/fondo1.jpg";
 import vrPoster from "../assets/poster3.jpg";
-// 
 
+// 
 
 
 const fadeUp = {
@@ -26,9 +25,38 @@ export default function Home({ setActivePage }) {
   // Modal video
   const [open, setOpen] = useState(false);
   const videoRef = useRef(null);
+  const [videoSrc, setVideoSrc] = useState("");
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
+    let cancelled = false;
+
+    if (!open || videoSrc) return undefined;
+
+    setIsVideoLoading(true);
+
+    import("../assets/video-driver.mp4")
+      .then((module) => {
+        if (!cancelled) {
+          setVideoSrc(module.default);
+        }
+      })
+      .catch((error) => {
+        console.error("No se pudo cargar el video de demo:", error);
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsVideoLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, videoSrc]);
+
+  useEffect(() => {
+    if (!open || !videoSrc) return;
 
     // Bloquea scroll del fondo mientras el modal de video esta abierto.
     const prev = document.body.style.overflow;
@@ -55,7 +83,7 @@ export default function Home({ setActivePage }) {
         currentVideo.currentTime = 0;
       }
     };
-  }, [open]);
+  }, [open, videoSrc]);
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setOpen(false);
@@ -114,7 +142,7 @@ export default function Home({ setActivePage }) {
 
           <div className="max-w-7xl mx-auto px-6 relative z-20 grid lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
-            <m.div variants={fadeUp} initial="hidden" animate="show" className="space-y-8">
+            <motion.div variants={fadeUp} initial="hidden" animate="show" className="space-y-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00a3ff]/10 border border-[#00a3ff]/20 text-[#00a3ff] text-xs font-extrabold uppercase tracking-widest">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-75"></span>
@@ -179,7 +207,7 @@ export default function Home({ setActivePage }) {
                   </a>
                 </div>
               </div>
-            </m.div>
+            </motion.div>
 
             {/* Right: VIDEO BONITO (solo 1 video) */}
             <div className="hidden lg:block relative">
@@ -831,14 +859,14 @@ export default function Home({ setActivePage }) {
         {/* ================= MODAL VIDEO ================= */}
         <AnimatePresence>
           {open && (
-            <m.div
+            <motion.div
               className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm grid place-items-center p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}
             >
-              <m.div
+              <motion.div
                 className="w-full max-w-4xl rounded-3xl overflow-hidden border border-white/10 bg-[#001a33]/95 shadow-[0_35px_120px_rgba(0,0,0,0.55)] relative"
                 initial={{ opacity: 0, y: 18, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -856,21 +884,28 @@ export default function Home({ setActivePage }) {
                 </button>
 
                 <div className="aspect-video bg-black">
-                  <video
-                    ref={videoRef}
-                    src={videoXP}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-full"
-                  />
+                  {videoSrc ? (
+                    <video
+                      ref={videoRef}
+                      src={videoSrc}
+                      poster={vrPoster}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    <div className="grid h-full place-items-center px-6 text-center text-white/75">
+                      {isVideoLoading ? "Cargando demo en video..." : "Preparando demo..."}
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-4 text-center text-white/70 text-sm font-bold">
                   Presiona <span className="text-white">ESC</span> para cerrar
                 </div>
-              </m.div>
-            </m.div>
+              </motion.div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

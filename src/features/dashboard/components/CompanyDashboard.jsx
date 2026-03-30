@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -130,10 +130,11 @@ function CompanyDashboard({ company, onLogout }) {
     });
 
     return filtered;
-  }, [currentCompany.pdfs, participantFilter, searchTerm, sortBy]);
+  }, [currentCompany.name, currentCompany.pdfs, participantFilter, searchTerm, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(processedPDFs.length / ITEMS_PER_PAGE));
-  const pageStart = (currentPage - 1) * ITEMS_PER_PAGE;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const pageStart = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
   const paginatedPDFs = processedPDFs.slice(pageStart, pageStart + ITEMS_PER_PAGE);
   const showingFrom = processedPDFs.length ? pageStart + 1 : 0;
   const showingTo = Math.min(pageStart + ITEMS_PER_PAGE, processedPDFs.length);
@@ -142,14 +143,8 @@ function CompanyDashboard({ company, onLogout }) {
   const handleSortChange = (e) => { setSortBy(e.target.value); setCurrentPage(1); };
   const handleFilterChange = (e) => { setParticipantFilter(e.target.value); setCurrentPage(1); };
 
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -177,7 +172,7 @@ function CompanyDashboard({ company, onLogout }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <m.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl p-6 shadow-lg">
+          <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-200 text-sm font-medium">Total de Documentos</p>
@@ -185,9 +180,9 @@ function CompanyDashboard({ company, onLogout }) {
               </div>
               <FileText className="w-12 h-12 text-blue-200 opacity-80" />
             </div>
-          </m.div>
+          </motion.div>
 
-          <m.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl p-6 shadow-lg">
+          <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-emerald-200 text-sm font-medium">Estado de la cuenta</p>
@@ -195,7 +190,7 @@ function CompanyDashboard({ company, onLogout }) {
               </div>
               <div className="w-4 h-4 bg-emerald-400 rounded-full animate-pulse"></div>
             </div>
-          </m.div>
+          </motion.div>
         </div>
 
         {(currentCompany.pdfs?.length || 0) > 0 && (
@@ -278,7 +273,7 @@ function CompanyDashboard({ company, onLogout }) {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {paginatedPDFs.map((pdf, index) => (
-                  <m.div
+                  <motion.div
                     key={pdf.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -331,20 +326,20 @@ function CompanyDashboard({ company, onLogout }) {
                         <Download className="w-4 h-4" />
                       </Button>
                     </div>
-                  </m.div>
+                  </motion.div>
                 ))}
               </div>
 
               {totalPages > 1 && (
                 <div className="px-6 pb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-sm text-slate-400">
-                    Pagina {currentPage} de {totalPages}
+                    Pagina {safeCurrentPage} de {totalPages}
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      disabled={currentPage === 1}
+                      disabled={safeCurrentPage === 1}
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       className="border-slate-600 text-slate-300 hover:bg-slate-700 disabled:opacity-40"
                     >
@@ -355,7 +350,7 @@ function CompanyDashboard({ company, onLogout }) {
                     <Button
                       size="sm"
                       variant="outline"
-                      disabled={currentPage === totalPages}
+                      disabled={safeCurrentPage === totalPages}
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       className="border-slate-600 text-slate-300 hover:bg-slate-700 disabled:opacity-40"
                     >
@@ -371,7 +366,7 @@ function CompanyDashboard({ company, onLogout }) {
       </div>
 
       {selectedPDF && <PDFViewer pdf={selectedPDF} onClose={() => setSelectedPDF(null)} />}
-    </m.div>
+    </motion.div>
   );
 }
 

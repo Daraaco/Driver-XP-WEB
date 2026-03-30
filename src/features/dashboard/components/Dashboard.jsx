@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
-import { Users } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Shield, Users } from "lucide-react";
 import AdminPanel from "@/features/dashboard/components/AdminPanel";
 import CompanyLogin from "@/features/dashboard/components/CompanyLogin";
 import CompanyDashboard from "@/features/dashboard/components/CompanyDashboard";
@@ -43,7 +43,7 @@ function Dashboard({ entry = "company" }) {
   if (view === "selection" && isAdminEntry) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 pt-24 md:pt-28">
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
@@ -54,7 +54,7 @@ function Dashboard({ entry = "company" }) {
           </div>
 
           <div className="grid gap-4">
-            <m.button
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setView("admin")}
@@ -67,9 +67,9 @@ function Dashboard({ entry = "company" }) {
                   <div className="text-sm text-purple-200">Gestiona empresas y documentos</div>
                 </div>
               </div>
-            </m.button>
+            </motion.button>
           </div>
-        </m.div>
+        </motion.div>
       </div>
     );
   }
@@ -78,7 +78,7 @@ function Dashboard({ entry = "company" }) {
     <AnimatePresence mode="wait">
       {view === "selection" && !isAdminEntry && (
         <div className="min-h-screen flex items-center justify-center p-4 pt-24 md:pt-28">
-          <m.button
+          <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
@@ -93,7 +93,7 @@ function Dashboard({ entry = "company" }) {
                 <div className="text-sm text-blue-200">Consulta tus documentos</div>
               </div>
             </div>
-          </m.button>
+          </motion.button>
         </div>
       )}
       {view === "admin" && <AdminPanel onLogout={handleLogout} onLogin={handleAdminLogin} />}

@@ -1,4 +1,4 @@
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Download, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -12,14 +12,14 @@ function PDFViewer({ pdf, onClose }) {
 
   return (
     <AnimatePresence>
-      <m.div
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
-        <m.div
+        <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
@@ -55,8 +55,8 @@ function PDFViewer({ pdf, onClose }) {
               </div>
             )}
           </div>
-        </m.div>
-      </m.div>
+        </motion.div>
+      </motion.div>
     </AnimatePresence>
   );
 }
